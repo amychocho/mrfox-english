@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr. Fox — Ch. 12 & 13 Vocabulary</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f0;
+      color: #1a1a18;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .app {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a1a18;
+      margin-bottom: 6px;
+    }
+    .header p {
+      font-size: 14px;
+      color: #6b6b68;
+    }
+
+    /* Tab row */
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.4rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tab {
+      padding: 7px 18px;
+      border-radius: 20px;
+      border: 1px solid #d0cfc8;
+      font-size: 13px;
+      cursor: pointer;
+      color: #6b6b68;
+      background: #fff;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .tab:hover { border-color: #a0a09a; }
+    .tab.active { background: #1D9E75; border-color: #1D9E75; color: #fff; }
+    .tab.video-tab {
+      background: #E24B4A;
+      border-color: #E24B4A;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .tab.video-tab:hover { background: #c03a39; border-color: #c03a39; }
+    .play-icon {
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 5px 0 5px 9px;
+      border-color: transparent transparent transparent #fff;
+      display: inline-block;
+    }
+
+    /* Word grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .word-chip {
+      background: #fff;
+      border: 1px solid #e0dfd8;
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+    }
+    .word-chip:hover {
+      border-color: #b0b0aa;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .word-chip.selected { border: 2px solid #1D9E75; }
+    .chip-word { font-size: 15px; font-weight: 600; color: #1a1a18; margin-bottom: 3px; }
+    .chip-phonetic { font-size: 11px; color: #9b9b96; margin-bottom: 5px; }
+    .chip-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    .badge-essential { background: #E1F5EE; color: #0F6E56; }
+    .badge-fun { background: #FAECE7; color: #8a3318; }
+    .badge-dahl { background: #EEEDFE; color: #3C3489; }
+
+    /* Card panel */
+    .card-panel {
+      background: #fff;
+      border: 1px solid #e0dfd8;
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 280px;
+    }
+    .card-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 280px;
+      color: #9b9b96;
+      font-size: 14px;
+      gap: 10px;
+    }
+    .card-placeholder span:first-child { font-size: 36px; }
+    .card-content { display: none; }
+    .card-content.visible { display: block; }
+
+    .card-top {
+      padding: 1.3rem 1.5rem 1rem;
+      border-bottom: 1px solid #f0efe8;
+    }
+    .card-word { font-size: 28px; font-weight: 700; color: #1a1a18; margin-bottom: 4px; }
+    .card-phonetic { font-size: 13px; color: #9b9b96; margin-bottom: 8px; }
+    .card-pos {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      background: #f0efe8;
+      color: #6b6b68;
+      font-weight: 500;
+    }
+
+    /* Steps */
+    .step {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #f0efe8;
+      opacity: 0.2;
+      transition: opacity 0.4s;
+    }
+    .step.revealed { opacity: 1; }
+    .step:last-child { border-bottom: none; }
+    .step-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #9b9b96;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .step-body {
+      font-size: 14px;
+      color: #1a1a18;
+      line-height: 1.7;
+    }
+    .step-body .hl { color: #1D9E75; font-weight: 600; }
+    .step-body .muted { color: #9b9b96; font-size: 13px; }
+    .step-body .quote {
+      font-style: italic;
+      color: #6b6b68;
+      font-size: 13px;
+      margin-top: 6px;
+      padding-left: 12px;
+      border-left: 3px solid #e0dfd8;
+      line-height: 1.6;
+    }
+
+    /* Reveal button */
+    .reveal-btn {
+      display: block;
+      width: calc(100% - 3rem);
+      margin: 1rem 1.5rem;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid #d0cfc8;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #1a1a18;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .reveal-btn:hover { background: #f5f5f0; }
+    .reveal-btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* Progress dots */
+    .dots {
+      display: flex;
+      gap: 6px;
+      padding: 0.8rem 1.5rem 1.2rem;
+      align-items: center;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #e0dfd8;
+      transition: background 0.2s;
+    }
+    .dot.lit { background: #1D9E75; }
+
+    /* Video overlay */
+    .video-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.88);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      padding: 1rem;
+    }
+    .video-overlay.show { display: flex; }
+    .video-box {
+      width: 100%;
+      max-width: 640px;
+    }
+    .video-box iframe {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: none;
+      border-radius: 12px;
+    }
+    .close-btn {
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 8px 20px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      background: transparent;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .close-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 12px;
+      color: #c0bfb8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <h1>Mr. Fox — Ch. 12 & 13 Vocabulary</h1>
+    <p>Click a word, then tap "Next" to reveal meaning, example &amp; tips one by one.</p>
+  </div>
+
+  <div class="tab-row">
+    <button class="tab active" onclick="filterWords('all', this)">All 15</button>
+    <button class="tab" onclick="filterWords('essential', this)">Essential 10</button>
+    <button class="tab" onclick="filterWords('fun', this)">Fun Expressions 5</button>
+    <button class="tab video-tab" onclick="openVideo()">
+      <span class="play-icon"></span> Watch Video
+    </button>
+  </div>
+
+  <div class="grid" id="wordGrid"></div>
+
+  <div class="card-panel">
+    <div class="card-placeholder" id="placeholder">
+      <span>🦊</span>
+      <span>Pick a word above to get started!</span>
+    </div>
+    <div class="card-content" id="cardContent">
+      <div class="card-top">
+        <div class="card-word" id="cWord"></div>
+        <div class="card-phonetic" id="cPhonetic"></div>
+        <span class="card-pos" id="cPos"></span>
+      </div>
+      <div id="stepsContainer"></div>
+      <button class="reveal-btn" id="revealBtn" onclick="revealNext()">Next ▾</button>
+      <div class="dots" id="dots"></div>
+    </div>
+  </div>
+
+  <div class="footer">Mr. Fox English Class · Chapter 12 &amp; 13</div>
+</div>
+
+<!-- Video overlay -->
+<div class="video-overlay" id="videoOverlay">
+  <div class="video-box">
+    <iframe id="ytFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+  </div>
+  <button class="close-btn" onclick="closeVideo()">✕ &nbsp; Close and return to vocab cards</button>
+</div>
+
+<script>
+  const YT_EMBED = "https://www.youtube.com/embed/STsA5QdWk9w?autoplay=1&rel=0";
+
+  const words = [
+    { word: "feast", phonetic: "[fiːst]", pos: "noun", cat: "essential", steps: [
+      { label: "Meaning", body: "A <span class='hl'>large, special meal</span> — lots of delicious food shared with others." },
+      { label: "In the book", body: "<div class='quote'>\"They were going to have a whacking great <span class='hl'>feast</span> before long.\"</div>" },
+      { label: "Your turn", body: "<em>\"We had a huge <span class='hl'>feast</span> at Christmas!\"</em>" },
+      { label: "Pronunciation tip", body: "<span class='hl'>FEEST</span> — 'ea' = long 'ee'. Rhymes with: beast · least · east 🎤" }
+    ]},
+    { word: "dig / dug", phonetic: "[dɪɡ / dʌɡ]", pos: "verb — irregular", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>To move soil or earth</span> using hands, claws, or a tool." },
+      { label: "In the book", body: "<div class='quote'>\"Mr Fox and the Small Foxes <span class='hl'>dug</span> fast and straight.\"</div>" },
+      { label: "Your turn", body: "Present: <span class='hl'>dig</span> &nbsp;→&nbsp; Past: <span class='hl'>dug</span><br><em>\"They <span class='hl'>dug</span> a tunnel under the farm.\"</em>" },
+      { label: "Pronunciation tip", body: "dig [dɪg] → short 'i' like <em>big</em><br>dug [dʌg] → short 'u' like <em>bug</em> 🐛" }
+    ]},
+    { word: "tunnel", phonetic: "[ˈtʌn.əl]", pos: "noun", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>An underground passage</span> — a long hole dug through the ground." },
+      { label: "In the book", body: "<div class='quote'>\"Peeking through a small hole in the roof of the <span class='hl'>tunnel</span>.\"</div>" },
+      { label: "Your turn", body: "<em>\"The fox family lived at the end of a long <span class='hl'>tunnel</span>.\"</em>" },
+      { label: "Pronunciation tip", body: "<span class='hl'>TUN</span>-nel — stress on the FIRST syllable. Say it fast: TUN-nəl ✅" }
+    ]},
+    { word: "excited", phonetic: "[ɪkˈsaɪ.tɪd]", pos: "adjective", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>Very happy and eager</span> about something that is going to happen." },
+      { label: "In the book", body: "<div class='quote'>\"They were all too <span class='hl'>excited</span> to feel tired or hungry.\"</div>" },
+      { label: "Your turn", body: "<em>\"I'm so <span class='hl'>excited</span> about the school trip!\"</em>" },
+      { label: "Word family", body: "excite → <span class='hl'>excited</span> → exciting → excitement ⚡<br><span class='muted'>I feel excited. / It's an exciting story.</span>" }
+    ]},
+    { word: "invite", phonetic: "[ɪnˈvaɪt]", pos: "verb", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>To ask someone to come</span> to a place or join an event." },
+      { label: "In the book", body: "<div class='quote'>\"I <span class='hl'>invite</span> everyone to share the feast.\"</div>" },
+      { label: "Your turn", body: "<em>\"She <span class='hl'>invited</span> all her friends to the party.\"</em>" },
+      { label: "Pronunciation tip", body: "in-<span class='hl'>VITE</span> (verb) — stress at the END 🎯<br><span class='muted'>Noun 'an invite' [ˈɪn.vaɪt] shifts stress to the front!</span>" }
+    ]},
+    { word: "share", phonetic: "[ʃeər]", pos: "verb", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>To use or give something</span> together with others." },
+      { label: "In the book", body: "<div class='quote'>\"I invite you to <span class='hl'>share</span> the feast.\"</div>" },
+      { label: "Your turn", body: "<em>\"Let's <span class='hl'>share</span> the pizza — half for you, half for me!\"</em>" },
+      { label: "Fun fact", body: "You already use this word! 📱<br>When you '<span class='hl'>share</span>' a post on social media — same word!" }
+    ]},
+    { word: "starve", phonetic: "[stɑːrv]", pos: "verb", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>To suffer from lack of food.</span><br>Casually: to feel extremely hungry (exaggeration)." },
+      { label: "In the book", body: "<div class='quote'>\"We're all <span class='hl'>starving</span> to death!\" — Badger</div>" },
+      { label: "Your turn", body: "<em>\"I'm <span class='hl'>starving</span>! Can we eat now?\"</em><br><span class='muted'>(You're very hungry — not actually dying! 😂)</span>" },
+      { label: "Fun fact", body: "\"I'm <span class='hl'>starving</span>\" = \"배고파 죽겠어\" — same exaggeration!<br>This is called <em>hyperbole</em> (과장법)." }
+    ]},
+    { word: "fault", phonetic: "[fɔːlt]", pos: "noun", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>Responsibility for something bad</span> that happened." },
+      { label: "In the book", body: "<div class='quote'>\"This mess you're in is all my <span class='hl'>fault</span>.\" — Mr Fox</div>" },
+      { label: "Your turn", body: "<em>\"It's not my <span class='hl'>fault</span> — he started it!\"</em>" },
+      { label: "Pronunciation tip", body: "<span class='hl'>FAWLT</span> — 'au' sounds like 'aw'.<br>Rhymes with: salt · halt · malt 🧂" }
+    ]},
+    { word: "furiously", phonetic: "[ˈfjʊər.i.əs.li]", pos: "adverb", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>In a very angry way.</span>" },
+      { label: "In the book", body: "<div class='quote'>\"I know it's your fault!\" said Badger <span class='hl'>furiously</span>.</div>" },
+      { label: "Your turn", body: "<em>\"She <span class='hl'>furiously</span> slammed the door and left.\"</em>" },
+      { label: "Word family", body: "furious (adj) + -ly = <span class='hl'>furiously</span> 🔥<br><span class='muted'>angry → angrily / mad → madly / furious → furiously</span>" }
+    ]},
+    { word: "magnificent", phonetic: "[mæɡˈnɪf.ɪ.sənt]", pos: "adjective", cat: "essential", steps: [
+      { label: "Meaning", body: "<span class='hl'>Extremely impressive and beautiful.</span>" },
+      { label: "In the book", body: "<div class='quote'>\"Mr Fox handed down three <span class='hl'>magnificent</span> hams.\"</div>" },
+      { label: "Your turn", body: "<em>\"What a <span class='hl'>magnificent</span> goal!\"</em><br><span class='muted'>Use it instead of 'very good' or 'amazing'!</span>" },
+      { label: "Pronunciation tip", body: "mag-<span class='hl'>NIF</span>-i-cent — 4 syllables, stress on -NIF- ✨<br>Practice: mag · NIF · i · cent" }
+    ]},
+    { word: "I haven't the foggiest!", phonetic: "[ˈfɒɡ.i.ɪst]", pos: "idiom", cat: "fun", steps: [
+      { label: "Meaning", body: "<span class='hl'>I have absolutely no idea!</span><br>Imagine your mind full of thick fog — you can't see anything! 🌫️" },
+      { label: "In the book", body: "<div class='quote'>\"I've been digging for three days and I haven't the <span class='hl'>foggiest</span> idea where I am!\" — Badger</div>" },
+      { label: "Try it!", body: "Teacher: \"Where is your homework?\"<br>You: \"<span class='hl'>I haven't the foggiest!</span>\" 😅" },
+      { label: "Why it's fun", body: "fog → foggy → foggiest = absolutely nothing in your mind!<br><span class='muted'>Very British — very Roald Dahl! 🇬🇧</span>" }
+    ]},
+    { word: "mouth-watering!", phonetic: "[maʊθ ˈwɔː.tər.ɪŋ]", pos: "expression", cat: "fun", steps: [
+      { label: "Meaning", body: "<span class='hl'>So delicious-looking that your mouth produces saliva!</span>" },
+      { label: "In the book", body: "<div class='quote'>\"Goodness me, look how your <span class='hl'>mouths are watering</span>!\" — Mr Fox</div>" },
+      { label: "Try it!", body: "<em>\"That pizza looks absolutely <span class='hl'>mouth-watering</span>!\"</em><br><em>\"The smell is making my mouth water!\"</em>" },
+      { label: "Why it's fun", body: "It's actually true! 🤓 When you see or smell delicious food, your brain tells your mouth to make saliva — the <em>salivary reflex</em>!" }
+    ]},
+    { word: "It's chaos!", phonetic: "[ˈkeɪ.ɒs]", pos: "expression", cat: "fun", steps: [
+      { label: "Meaning", body: "<span class='hl'>Total disorder — everything is out of control!</span>" },
+      { label: "In the book", body: "<div class='quote'>\"It's <span class='hl'>chaos</span>! Half the wood has disappeared!\" — Badger</div>" },
+      { label: "Try it!", body: "<em>\"When the teacher left, the class was total <span class='hl'>chaos</span>!\"</em>" },
+      { label: "Pronunciation warning!", body: "chaos = <span class='hl'>KAY-oss</span> [ˈkeɪ.ɒs]<br>'ch' sounds like 'k' — NOT like 'chair'!<br>KAY-oss ✅ &nbsp;&nbsp; Chay-oss ❌ 🎯" }
+    ]},
+    { word: "Don't be a twerp!", phonetic: "[twɜːrp]", pos: "British slang", cat: "fun", steps: [
+      { label: "Meaning", body: "<span class='hl'>Don't be silly / foolish!</span><br>Mild and playful — not very rude, more funny." },
+      { label: "In the book", body: "<div class='quote'>\"Don't be a <span class='hl'>twerp</span>!\" said Mr Fox.</div>" },
+      { label: "Try it!", body: "<em>\"Oh, don't be such a <span class='hl'>twerp</span> — of course I'll help you!\"</em>" },
+      { label: "Roald Dahl loves this!", body: "Classic British slang — still used in Britain today! 😄<br>Similar words: silly, goofy, fool" }
+    ]},
+    { word: "churgle", phonetic: "[ˈtʃɜːr.ɡəl]", pos: "Dahl's own word!", cat: "fun", steps: [
+      { label: "Meaning", body: "<span class='hl'>To laugh with a deep, bubbly belly laugh!</span>" },
+      { label: "In the book", body: "<div class='quote'>\"...made them <span class='hl'>churgle</span> with laughter every time they thought of it.\"</div>" },
+      { label: "How was it made?", body: "<span class='hl'>chuckle</span> (laugh quietly) + <span class='hl'>gurgle</span> (bubbling sound) = <span class='hl'>churgle</span>!<br>Dahl invented it by blending two real words! 🧪" },
+      { label: "Gobblefunk!", body: "Dahl loved making up words — he called his invented language <em>Gobblefunk</em> 🦊✨<br><span class='muted'>More examples: scrumdiddlyumptious · whizzpopping · splendiferous</span>" }
+    ]}
+  ];
+
+  let currentFilter = 'all';
+  let selectedWord = null;
+  let currentStep = 0;
+
+  function openVideo() {
+    document.getElementById('ytFrame').src = YT_EMBED;
+    document.getElementById('videoOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVideo() {
+    document.getElementById('videoOverlay').classList.remove('show');
+    document.getElementById('ytFrame').src = '';
+    document.body.style.overflow = '';
+  }
+
+  function filterWords(cat, btn) {
+    currentFilter = cat;
+    document.querySelectorAll('.tab:not(.video-tab)').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid();
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('wordGrid');
+    const filtered = currentFilter === 'all' ? words : words.filter(w => w.cat === currentFilter);
+    grid.innerHTML = '';
+    filtered.forEach(w => {
+      const chip = document.createElement('div');
+      chip.className = 'word-chip' + (selectedWord && selectedWord.word === w.word ? ' selected' : '');
+      const badgeClass = w.cat === 'essential' ? 'badge-essential' : (w.pos === "Dahl's own word!" ? 'badge-dahl' : 'badge-fun');
+      const badgeLabel = w.cat === 'essential' ? 'Essential' : (w.pos === "Dahl's own word!" ? 'Dahl!' : 'Expression');
+      chip.innerHTML = `
+        <div class="chip-word">${w.word.split(' ')[0]}</div>
+        <div class="chip-phonetic">${w.phonetic}</div>
+        <span class="chip-badge ${badgeClass}">${badgeLabel}</span>
+      `;
+      chip.onclick = () => selectWord(w);
+      grid.appendChild(chip);
+    });
+  }
+
+  function selectWord(w) {
+    selectedWord = w;
+    currentStep = 0;
+    renderGrid();
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('cardContent').classList.add('visible');
+    document.getElementById('cWord').textContent = w.word;
+    document.getElementById('cPhonetic').textContent = w.phonetic;
+    document.getElementById('cPos').textContent = w.pos;
+    const stepsEl = document.getElementById('stepsContainer');
+    stepsEl.innerHTML = '';
+    w.steps.forEach((s, i) => {
+      const div = document.createElement('div');
+      div.className = 'step' + (i === 0 ? ' revealed' : '');
+      div.id = 'step-' + i;
+      div.innerHTML = `<div class="step-label">${s.label}</div><div class="step-body">${s.body}</div>`;
+      stepsEl.appendChild(div);
+    });
+    renderDots();
+    updateBtn();
+    document.querySelector('.card-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function revealNext() {
+    currentStep++;
+    const el = document.getElementById('step-' + currentStep);
+    if (el) el.classList.add('revealed');
+    renderDots();
+    updateBtn();
+  }
+
+  function renderDots() {
+    const el = document.getElementById('dots');
+    const total = selectedWord ? selectedWord.steps.length : 0;
+    el.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i <= currentStep ? ' lit' : '');
+      el.appendChild(d);
+    }
+  }
+
+  function updateBtn() {
+    const btn = document.getElementById('revealBtn');
+    const total = selectedWord ? selectedWord.steps.length : 0;
+    if (currentStep >= total - 1) {
+      btn.textContent = 'All done! ✓';
+      btn.disabled = true;
+    } else {
+      btn.textContent = `Next ▾  (${currentStep + 1} / ${total})`;
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById('videoOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeVideo();
+  });
+
+  renderGrid();
+</script>
+</body>
+</html>
